@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#6C63FF" />
+  <meta name="description" content="VaultX - Your Personal Secure Knowledge Vault" />
+
+  <!-- PWA -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="VaultX" />
+  <meta name="mobile-web-app-capable" content="yes" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
+  <link rel="icon" type="image/png" href="assets/icons/icon-96.png" />
+
+  <title>VaultX</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+
+<body>
+
+<!-- ================================================
+     SCREEN 1: SPLASH
+     ================================================ -->
+<div id="splash-screen" class="splash-screen">
+  <div class="splash-content">
+    <div class="splash-logo">
+      <div class="splash-icon">
+        <i class="fas fa-vault"></i>
+      </div>
+      <h1>Vault<span>X</span></h1>
+    </div>
+    <div class="splash-loader">
+      <div class="splash-loader-bar"></div>
+    </div>
+    <p class="splash-tagline">Your Knowledge. Secured.</p>
+  </div>
+</div>
+
+
+<!-- ================================================
+     SCREEN 2: ONBOARDING (First time only)
+     ================================================ -->
+<div id="onboarding-screen" class="screen hidden">
+
+  <!-- Step indicators -->
+  <div class="onboard-steps">
+    <div class="step-dot active" data-step="1"></div>
+    <div class="step-dot" data-step="2"></div>
+    <div class="step-dot" data-step="3"></div>
+    <div class="step-dot" data-step="4"></div>
+  </div>
+
+  <!-- Step 1: Welcome -->
+  <div class="onboard-step active" id="ob-step-1">
+    <div class="ob-illustration">
+      <div class="ob-icon-big" style="background:linear-gradient(135deg,#6C63FF,#00D4FF)">
+        <i class="fas fa-vault"></i>
+      </div>
+    </div>
+    <h2>Welcome to VaultX</h2>
+    <p>Your personal secure vault for links, files, notes, YouTube videos and more — all in one place.</p>
+    <div class="ob-features">
+      <div class="ob-feature">
+        <i class="fas fa-lock" style="color:#6C63FF"></i>
+        <span>Bank-level Security</span>
+      </div>
+      <div class="ob-feature">
+        <i class="fab fa-google-drive" style="color:#00D4FF"></i>
+        <span>Your Google Drive Storage</span>
+      </div>
+      <div class="ob-feature">
+        <i class="fas fa-bolt" style="color:#FFD200"></i>
+        <span>Find Anything in Seconds</span>
+      </div>
+      <div class="ob-feature">
+        <i class="fas fa-wifi-slash" style="color:#38ef7d"></i>
+        <span>Works Offline Too</span>
+      </div>
+    </div>
+    <button class="btn-primary" onclick="Onboard.nextStep()">
+      Get Started <i class="fas fa-arrow-right"></i>
+    </button>
+  </div>
+
+  <!-- Step 2: PIN Setup (MANDATORY) -->
+  <div class="onboard-step" id="ob-step-2">
+    <div class="ob-header">
+      <div class="ob-icon-big" style="background:linear-gradient(135deg,#FF6B6B,#FF8E53)">
+        <i class="fas fa-lock"></i>
+      </div>
+      <h2>Set Your Secret PIN</h2>
+      <p>This PIN will protect your vault. <strong>Cannot be skipped.</strong></p>
+    </div>
+
+    <div class="pin-display" id="ob-pin-display">
+      <div class="pin-dot" id="ob-dot-0"></div>
+      <div class="pin-dot" id="ob-dot-1"></div>
+      <div class="pin-dot" id="ob-dot-2"></div>
+      <div class="pin-dot" id="ob-dot-3"></div>
+      <div class="pin-dot" id="ob-dot-4"></div>
+      <div class="pin-dot" id="ob-dot-5"></div>
+    </div>
+
+    <p class="pin-hint" id="ob-pin-hint">Enter 6-digit PIN</p>
+
+    <div class="pin-keypad">
+      <button class="pin-key" data-val="1">1</button>
+      <button class="pin-key" data-val="2">2</button>
+      <button class="pin-key" data-val="3">3</button>
+      <button class="pin-key" data-val="4">4</button>
+      <button class="pin-key" data-val="5">5</button>
+      <button class="pin-key" data-val="6">6</button>
+      <button class="pin-key" data-val="7">7</button>
+      <button class="pin-key" data-val="8">8</button>
+      <button class="pin-key" data-val="9">9</button>
+      <button class="pin-key pin-key-empty"></button>
+      <button class="pin-key" data-val="0">0</button>
+      <button class="pin-key pin-key-del" id="ob-pin-del">
+        <i class="fas fa-delete-left"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Step 3: Biometric -->
+  <div class="onboard-step" id="ob-step-3">
+    <div class="ob-icon-big" style="background:linear-gradient(135deg,#11998e,#38ef7d)">
+      <i class="fas fa-fingerprint"></i>
+    </div>
+    <h2>Enable Biometric Lock</h2>
+    <p>Use your fingerprint or face ID for quick and secure access to VaultX.</p>
+
+    <div class="biometric-demo">
+      <div class="biometric-ring" id="bio-ring">
+        <i class="fas fa-fingerprint"></i>
+      </div>
+      <p id="bio-status-text">Tap to enable biometric</p>
+    </div>
+
+    <button class="btn-primary" id="enable-bio-btn" onclick="Onboard.enableBiometric()">
+      <i class="fas fa-fingerprint"></i> Enable Biometric
+    </button>
+    <button class="btn-skip" onclick="Onboard.skipBiometric()">
+      Skip for now
+    </button>
+  </div>
+
+  <!-- Step 4: Connect Google Drive -->
+  <div class="onboard-step" id="ob-step-4">
+    <div class="ob-icon-big" style="background:linear-gradient(135deg,#4285F4,#34A853)">
+      <i class="fab fa-google-drive"></i>
+    </div>
+    <h2>Connect Google Drive</h2>
+    <p>VaultX uses YOUR Google Drive to store files. Free 15GB per account. Add multiple accounts!</p>
+
+    <div class="drive-info-cards">
+      <div class="drive-info-card">
+        <i class="fas fa-hdd" style="color:#4285F4"></i>
+        <div>
+          <strong>15GB Free</strong>
+          <span>Per Google account</span>
+        </div>
+      </div>
+      <div class="drive-info-card">
+        <i class="fas fa-plus-circle" style="color:#34A853"></i>
+        <div>
+          <strong>Unlimited Accounts</strong>
+          <span>Add as many drives as you want</span>
+        </div>
+      </div>
+      <div class="drive-info-card">
+        <i class="fas fa-shield-alt" style="color:#EA4335"></i>
+        <div>
+          <strong>Your Data</strong>
+          <span>Files stay in your own Drive</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Connected drives list -->
+    <div class="connected-drives" id="ob-drives-list">
+      <!-- Populated by JS -->
+    </div>
+
+    <button class="btn-google-drive" id="ob-add-drive-btn" onclick="Onboard.addDrive()">
+      <img src="https://www.google.com/favicon.ico" width="20" alt="Google" />
+      Connect Google Drive
+    </button>
+
+    <button class="btn-primary hidden" id="ob-finish-btn" onclick="Onboard.finish()">
+      Start Using VaultX <i class="fas fa-arrow-right"></i>
+    </button>
+
+    <button class="btn-skip" onclick="Onboard.skipDrive()">
+      Skip — I'll add drive later
+    </button>
+  </div>
+
+</div>
+
+
+<!-- ================================================
+     SCREEN 3: AUTH (Login / Register)
+     ================================================ -->
+<div id="auth-screen" class="screen hidden">
+
+  <div class="auth-bg">
+    <div class="auth-blob blob1"></div>
+    <div class="auth-blob blob2"></div>
+    <div class="auth-blob blob3"></div>
+  </div>
+
+  <div class="auth-container">
+
+    <!-- Logo -->
+    <div class="auth-logo">
+      <div class="logo-icon"><i class="fas fa-vault"></i></div>
+      <h1 class="logo-text">Vault<span>X</span></h1>
+      <p class="auth-tagline">Your Knowledge. Secured.</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-tab="login">Sign In</button>
+      <button class="auth-tab" data-tab="register">Sign Up</button>
+    </div>
+
+    <!-- Login Form -->
+    <div class="auth-form active" id="form-login">
+      <div class="input-wrap">
+        <i class="fas fa-envelope"></i>
+        <input type="email" id="login-email"
+               placeholder="Email address"
+               autocomplete="email" />
+      </div>
+      <div class="input-wrap">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="login-password"
+               placeholder="Password"
+               autocomplete="current-password" />
+        <button class="eye-btn" data-target="login-password">
+          <i class="fas fa-eye"></i>
+        </button>
+      </div>
+      <div class="auth-forgot">
+        <button id="forgot-btn">Forgot Password?</button>
+      </div>
+      <button class="btn-primary" id="login-btn">
+        <span>Sign In</span>
+        <i class="fas fa-arrow-right"></i>
+      </button>
+      <div class="auth-or"><span>or</span></div>
+      <button class="btn-google" id="google-signin-btn">
+        <img src="https://www.google.com/favicon.ico" width="20" alt="G" />
+        Continue with Google
+      </button>
+    </div>
+
+    <!-- Register Form -->
+    <div class="auth-form" id="form-register">
+      <div class="input-wrap">
+        <i class="fas fa-user"></i>
+        <input type="text" id="reg-name"
+               placeholder="Full Name"
+               autocomplete="name" />
+      </div>
+      <div class="input-wrap">
+        <i class="fas fa-envelope"></i>
+        <input type="email" id="reg-email"
+               placeholder="Email address"
+               autocomplete="email" />
+      </div>
+      <div class="input-wrap">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="reg-password"
+               placeholder="Password (min 6 chars)"
+               autocomplete="new-password" />
+        <button class="eye-btn" data-target="reg-password">
+          <i class="fas fa-eye"></i>
+        </button>
+      </div>
+      <div class="input-wrap">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="reg-confirm"
+               placeholder="Confirm Password"
+               autocomplete="new-password" />
+      </div>
+      <button class="btn-primary" id="register-btn">
+        <span>Create Account</span>
+        <i class="fas fa-arrow-right"></i>
+      </button>
+      <div class="auth-or"><span>or</span></div>
+      <button class="btn-google" id="google-signup-btn">
+        <img src="https://www.google.com/favicon.ico" width="20" alt="G" />
+        Sign up with Google
+      </button>
+    </div>
+
+    <!-- Auth Message -->
+    <div class="auth-msg hidden" id="auth-msg"></div>
+
+  </div>
+</div>
+
+
+<!-- ================================================
+     SCREEN 4: PIN LOCK (Every app open)
+     ================================================ -->
+<div id="pin-screen" class="screen hidden">
+  <div class="pin-lock-container">
+
+    <div class="pin-lock-logo">
+      <div class="logo-icon"><i class="fas fa-vault"></i></div>
+      <h1 class="logo-text">Vault<span>X</span></h1>
+    </div>
+
+    <div class="pin-lock-user">
+      <div class="user-avatar-lock" id="lock-avatar">
+        <i class="fas fa-user"></i>
+      </div>
+      <p id="lock-username">Welcome back!</p>
+    </div>
+
+    <h3 id="pin-lock-title">Enter PIN</h3>
+
+    <div class="pin-display">
+      <div class="pin-dot" id="lock-dot-0"></div>
+      <div class="pin-dot" id="lock-dot-1"></div>
+      <div class="pin-dot" id="lock-dot-2"></div>
+      <div class="pin-dot" id="lock-dot-3"></div>
+      <div class="pin-dot" id="lock-dot-4"></div>
+      <div class="pin-dot" id="lock-dot-5"></div>
+    </div>
+
+    <p class="pin-error hidden" id="pin-error-msg">Wrong PIN. Try again.</p>
+
+    <div class="pin-keypad">
+      <button class="pin-key" data-val="1">1</button>
+      <button class="pin-key" data-val="2">2</button>
+      <button class="pin-key" data-val="3">3</button>
+      <button class="pin-key" data-val="4">4</button>
+      <button class="pin-key" data-val="5">5</button>
+      <button class="pin-key" data-val="6">6</button>
+      <button class="pin-key" data-val="7">7</button>
+      <button class="pin-key" data-val="8">8</button>
+      <button class="pin-key" data-val="9">9</button>
+      <button class="pin-key pin-bio-key" id="lock-bio-btn">
+        <i class="fas fa-fingerprint"></i>
+      </button>
+      <button class="pin-key" data-val="0">0</button>
+      <button class="pin-key pin-key-del" id="lock-pin-del">
+        <i class="fas fa-delete-left"></i>
+      </button>
+    </div>
+
+    <button class="btn-link" id="forgot-pin-btn">
+      Forgot PIN? Sign in again
+    </button>
+
+  </div>
+</div>
+
+
+<!-- ================================================
+     SCREEN 5: MAIN APP
+     ================================================ -->
+<div id="app-screen" class="screen hidden">
+
+  <!-- Top Header -->
+  <header class="app-header" id="app-header">
+    <div class="header-left">
+      <span class="header-logo">Vault<span>X</span></span>
+    </div>
+    <div class="header-right">
+      <button class="header-icon-btn" id="search-btn">
+        <i class="fas fa-search"></i>
+      </button>
+      <button class="header-icon-btn" id="header-notify-btn">
+        <i class="fas fa-bell"></i>
+      </button>
+      <div class="header-avatar" id="header-avatar" onclick="App.goTo('settings')">
+        <img id="header-avatar-img" src="" alt="" style="display:none" />
+        <i class="fas fa-user" id="header-avatar-icon"></i>
+      </div>
+    </div>
+  </header>
+
+  <!-- Search Bar (Hidden by default) -->
+  <div class="search-bar-wrap hidden" id="search-bar-wrap">
+    <div class="search-bar">
+      <i class="fas fa-search"></i>
+      <input type="text" id="search-input"
+             placeholder="Search your vault..." />
+      <button id="search-close"><i class="fas fa-times"></i></button>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <main class="app-main" id="app-main">
+
+    <!-- PAGE: HOME -->
+    <section class="page active" id="page-home">
+
+      <!-- Greeting -->
+      <div class="home-greeting">
+        <div>
+          <p class="greeting-time" id="greeting-time">Good morning 👋</p>
+          <h2 class="greeting-name" id="greeting-name">Loading...</h2>
+        </div>
+        <div class="total-badge">
+          <i class="fas fa-layer-group"></i>
+          <span id="total-count">0</span>
+        </div>
+      </div>
+
+      <!-- Drive Status Bar -->
+      <div class="drive-status-bar" id="drive-status-bar">
+        <div class="drive-status-left">
+          <i class="fab fa-google-drive"></i>
+          <span id="drive-status-text">No drive connected</span>
+        </div>
+        <button class="drive-manage-btn" onclick="App.goTo('drives')">
+          Manage
+        </button>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="quick-stats">
+        <div class="stat-card" onclick="App.goTo('youtube')">
+          <div class="stat-icon" style="background:linear-gradient(135deg,#FF0000,#FF6B6B)">
+            <i class="fab fa-youtube"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-num" id="stat-youtube">0</span>
+            <span class="stat-label">Videos</span>
+          </div>
+        </div>
+        <div class="stat-card" onclick="App.goTo('links')">
+          <div class="stat-icon" style="background:linear-gradient(135deg,#00D4FF,#0099CC)">
+            <i class="fas fa-link"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-num" id="stat-links">0</span>
+            <span class="stat-label">Links</span>
+          </div>
+        </div>
+        <div class="stat-card" onclick="App.goTo('notes')">
+          <div class="stat-icon" style="background:linear-gradient(135deg,#11998e,#38ef7d)">
+            <i class="fas fa-sticky-note"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-num" id="stat-notes">0</span>
+            <span class="stat-label">Notes</span>
+          </div>
+        </div>
+        <div class="stat-card" onclick="App.goTo('files')">
+          <div class="stat-icon" style="background:linear-gradient(135deg,#6C63FF,#9C63FF)">
+            <i class="fas fa-folder"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-num" id="stat-files">0</span>
+            <span class="stat-label">Files</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Categories -->
+      <div class="section-title">
+        <h3>Categories</h3>
+        <button onclick="App.goTo('all')">See all</button>
+      </div>
+
+      <div class="category-list" id="category-list">
+        <div class="cat-item" onclick="App.goTo('youtube')">
+          <div class="cat-icon" style="background:linear-gradient(135deg,#FF0000,#FF6B6B)">
+            <i class="fab fa-youtube"></i>
+          </div>
+          <div class="cat-info">
+            <span class="cat-name">YouTube Videos</span>
+            <span class="cat-count" id="cat-youtube">0 videos</span>
+          </div>
+          <i class="fas fa-chevron-right cat-chevron"></i>
+        </div>
+
+        <div class="cat-item" onclick="App.goTo('links')">
+          <div class="cat-icon" style="background:linear-gradient(135deg,#00D4FF,#0099CC)">
+            <i class="fas fa-link"></i>
+          </div>
+          <div class="cat-info">
+            <span class="cat-name">Web Links</span>
+            <span class="cat-count" id="cat-links">0 links</span>
+          </div>
+          <i class="fas fa-chevron-right cat-chevron"></i>
+        </div>
+
+        <div class="cat-item" onclick="App.goTo('documents')">
+          <div class="cat-icon" style="background:linear-gradient(135deg,#6C63FF,#9C63FF)">
+            <i class="fas fa-file-alt"></i>
+          </div>
+          <div class="cat-info">
+            <span class="cat-name">Documents & PDFs</span>
+            <span class="cat-count" id="cat-documents">0 files</span>
+          </div>
+          <i class="fas fa-chevron-right cat-chevron"></i>
+        </div>
+
+        <div class="cat-item" onclick="App.goTo('study')">
+          <div class="cat-icon" style="background:linear-gradient(135deg,#F7971E,#FFD200)">
+            <i class="fas fa-graduation-cap"></i>
+          </div>
+          <div class="cat-info">
+            <span class="cat-name">Study Materials</span>
+            <span class="cat-count" id="cat-study">0 items</span>
+          </div>
+          <i class="fas fa-chevron-right cat-chevron"></i>
+        </div>
+
+        <div class="cat-item" onclick="App.goTo('notes')">
+          <div class="cat-icon" style="background:linear-gradient(135deg,#11998e,#38ef7d)">
+            <i class="fas fa-sticky-note"></i>
+          </div>
+          <div class="cat-info">
+            <span class="cat-name">Quick Notes</span>
+            <span class="cat-count" id="cat-notes">0 notes</span>
+          </div>
+          <i class="fas fa-chevron-right cat-chevron"></i>
+        </div>
+
+        <div class="cat-item" onclick="App.goTo('images')">
+          <div class="cat-icon" style="background:linear-gradient(135deg,#f953c6,#b91d73)">
+            <i class="fas fa-images"></i>
+          </div>
+          <div class="cat-info">
+            <span class="cat-name">Images</span>
+            <span class="cat-count" id="cat-images">0 images</span>
+          </div>
+          <i class="fas fa-chevron-right cat-chevron"></i>
+        </div>
+      </div>
+
+      <!-- Recently Added -->
+      <div class="section-title">
+        <h3>Recently Added</h3>
+        <button onclick="App.goTo('all')">See all</button>
+      </div>
+
+      <div class="recent-list" id="recent-list">
+        <div class="empty-state" id="home-empty">
+          <div class="empty-icon"><i class="fas fa-inbox"></i></div>
+          <h4>Your vault is empty</h4>
+          <p>Tap the + button to add your first item</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- PAGE: YOUTUBE -->
+    <section class="page" id="page-youtube">
+      <div class="page-topbar">
+        <button class="back-btn" onclick="App.goBack()">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <h2><i class="fab fa-youtube" style="color:#FF0000"></i> YouTube</h2>
+        <button class="sort-btn" onclick="App.showSort()">
+          <i class="fas fa-sort"></i>
+        </button>
+      </div>
+      <div class="page-content" id="list-youtube">
+        <div class="empty-state">
+          <div class="empty-icon" style="color:#FF0000">
+            <i class="fab fa-youtube"></i>
+          </div>
+          <h4>No YouTube videos yet</h4>
+          <p>Paste a YouTube link to save it</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE: LINKS -->
+    <section class="page" id="page-links">
+      <div class="page-topbar">
+        <button class="back-btn" onclick="App.goBack()">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <h2><i class="fas fa-link" style="color:#00D4FF"></i> Web Links</h2>
+        <button class="sort-btn" onclick="App.showSort()">
+          <i class="fas fa-sort"></i>
+        </button>
+      </div>
+      <div class="page-content" id="list-links">
+        <div class="empty-state">
+          <div class="empty-icon" style="color:#00D4FF">
+            <i class="fas fa-link"></i>
+          </div>
+          <h4>No web links yet</h4>
+          <p>Save any website URL here</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE: DOCUMENTS -->
+    <section class="page" id="page-documents">
+      <div class="page-topbar">
+        <button class="back-btn" onclick="App.goBack()">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <h2><i class="fas fa-file-alt" style="color:#6C63FF"></i> Documents</h2>
+        <button class="sort-btn" onclick="App.showSort()">
+          <i class="fas fa-sort"></i>
+        </button>
+      </div>
+      <div class="page-content" id="list-documents">
+        <div class="empty-state">
+          <div class="empty-icon" style="color:#6C63FF">
+            <i class="fas fa-file-alt"></i>
+          </div>
+          <h4>No documents yet</h4>
+          <p>Connect Google Drive to upload files</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE: STUDY -->
+    <section class="page" id="page-study">
+      <div class="page-topbar">
+        <button class="back-btn" onclick="App.goBack()">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <h2><i class="fas fa-graduation-cap" style="color:#FFD200"></i> Study</h2>
+        <button class="sort-btn" onclick="App.showSort()">
+          <i class="fas fa-sort"></i>
+        </button>
+      </div>
+      <div class="page-content" id="list-study">
+        <div class="empty-state">
+          <div class="empty-icon" style="color:#FFD200">
+            <i class="fas fa-graduation-cap"></i>
+          </div>
+          <h4>No study materials yet</h4>
+          <p>Save your study resources here</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE: NOTES -->
+    <section class="page" id="page-notes">
+      <div class="page-topbar">
+        <button class="back-btn" onclick="App.goBack()">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <h2><i class="fas fa-sticky-note" style="color:#38ef7d"></i> Notes</h2>
+        <button class="sort-btn" onclick="App.showSort()">
+          <i class="fas fa-sort"></i>
+        </button>
+      </div>
+      <div class="notes-grid" id="list-notes">
+        <div class="empty-state" style="grid-column:1/-1">
+          <div class="empty-icon" style="color:#38ef7d">
+            <i class="fas fa-sticky-note"></i>
+          </div>
+          <h4>No notes yet</h4>
+          <p>Write your first quick note</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE: IMAGES -->
+    <section class="page" id="page-images">
+      <div class="page-topbar">
+        <button class="back-btn" onclick="App.goBack()">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <h2><i class="fas fa-images" style="color:#f953c6"></i> Images</h2>
+        <button class="sort-btn" onclick="App.showSort()">
+          <i class="fas fa-sort"></i>
+        </button>
+      </div>
+      <div class="image-grid" id="list-images">
+        <div class="empty-state" style="grid-column:1/-1">
+          <div class="empty-icon" style="color:#f953c6">
+            <i class="fas fa-images"></i>
+          </div>
+          <h4>No images yet</h4>
+          <p>Upload images from your Drive</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE: FAVORITES -->
+    <section class="page" id="page-favorites">
+      <div class="page-topbar">
+        <h2><i class="fas fa-star" style="color:#FFD200"></i> Favorites</h2>
+      </div>
+      <div class="page-content" id="list-favorites">
+        <div class="empty-state">
+          <div class="empty-icon" style="color:#FFD200">
+            <i class="fas fa-star"></i>
+          </div>
+          <h4>No favorites yet</h4>
+          <p>Star any item to find it here quickly</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE: DRIVES -->
+    <section class="page" id="page-drives">
+      <div class="page-topbar">
+        <button class="back-btn" onclick="App.goBack()">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <h2><i class="fab fa-google-drive"></i> My Drives</h2>
+      </div>
+
+      <div class="drives-container">
+
+        <div class="drives-list" id="drives-list">
+          <!-- Populated by JS -->
+        </div>
+
+        <button class="btn-add-drive" id="add-drive-btn">
+          <i class="fab fa-google-drive"></i>
+          Add Google Drive Account
+        </button>
+
+        <div class="drive-tips">
+          <h4><i class="fas fa-lightbulb" style="color:#FFD200"></i> Tips</h4>
+          <p>• Each Google account gives 15GB free storage</p>
+          <p>• Add multiple accounts for more space</p>
+          <p>• Files stay in YOUR Google Drive</p>
+          <p>• VaultX only saves links, not the files</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PAGE: SETTINGS -->
+    <section class="page" id="page-settings">
+      <div class="page-topbar">
+        <h2><i class="fas fa-cog"></i> Settings</h2>
+      </div>
+
+      <div class="settings-body">
+
+        <!-- Profile Card -->
+        <div class="profile-card">
+          <div class="profile-pic" id="settings-pic">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="profile-info">
+            <h3 id="settings-name">User</h3>
+            <p id="settings-email">user@email.com</p>
+          </div>
+        </div>
+
+        <!-- Security Group -->
+        <div class="settings-group">
+          <div class="settings-group-label">Security</div>
+
+          <div class="settings-row" onclick="Settings.changePIN()">
+            <div class="settings-row-left">
+              <div class="settings-row-icon" style="background:#6C63FF">
+                <i class="fas fa-lock"></i>
+              </div>
+              <span>Change PIN</span>
+            </div>
+            <i class="fas fa-chevron-right"></i>
+          </div>
+
+          <div class="settings-row" onclick="Settings.changePassword()">
+            <div class="settings-row-left">
+              <div class="settings-row-icon" style="background:#FF6B6B">
+                <i class="fas fa-key"></i>
+              </div>
+              <span>Change Password</span>
+            </div>
+            <i class="fas fa-chevron-right"></i>
+          </div>
+
+          <div class="settings-row">
+            <div class="settings-row-left">
+              <div class="settings-row-icon" style="background:#11998e">
+                <i class="fas fa-fingerprint"></i>
+              </div>
+              <span>Biometric Lock</span>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="bio-toggle" onchange="Settings.toggleBiometric(this)" />
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+
+          <div class="settings-row">
+            <div class="settings-row-left">
+              <div class="settings-row-icon" style="background:#F7971E">
+                <i class="fas fa-clock"></i>
+              </div>
+              <span>Auto-lock Timer</span>
+            </div>
+            <select class="settings-select" id="autolock-val"
+                    onchange="Settings.setAutoLock(this.value)">
+              <option value="1">1 min</option>
+              <option value="5" selected>5 min</option>
+              <option value="15">15 min</option>
+              <option value="30">30 min</option>
+              <option value="0">Never</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Storage Group -->
+        <div class="settings-group">
+          <div class="settings-group-label">Storage & Drives</div>
+
+          <div class="settings-row" onclick="App.goTo('drives')">
+            <div class="settings-row-left">
+              <div class="settings-row-icon" style="background:#4285F4">
+                <i class="fab fa-google-drive"></i>
+              </div>
+              <span>Manage Drives</span>
+            </div>
+            <i class="fas fa-chevron-right"></i>
+          </div>
+
+          <div class="settings-row" onclick="Settings.exportData()">
+            <div class="settings-row-left">
+              <div class="settings-row-icon" style="background:#34A853">
+                <i class="fas fa-download"></i>
+              </div>
+              <span>Export My Data</span>
+            </div>
+            <i class="fas fa-chevron-right"></i>
+          </div>
+        </div>
+
+        <!-- App Group -->
+        <div class="settings-group">
+          <div class="settings-group-label">App</div>
+
+          <div class="settings-row">
+            <div class="settings-row-left">
+              <div class="settings-row-icon" style="background:#1A1A2E">
+                <i class="fas fa-moon"></i>
+              </div>
+              <span>Dark Mode</span>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="dark-toggle" checked
+                     onchange="Settings.toggleDark(this)" />
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+
+        </div>
+
+        <!-- Account Group -->
+        <div class="settings-group">
+          <div class="settings-group-label">Account</div>
+
+          <div class="settings-row danger" onclick="Settings.signOut()">
+            <div class="settings-row-left">
+              <div class="settings-row-icon" style="background:#FF4444">
+                <i class="fas fa-sign-out-alt"></i>
+              </div>
+              <span>Sign Out</span>
+            </div>
+            <i class="fas fa-chevron-right"></i>
+          </div>
+
+          <div class="settings-row danger" onclick="Settings.deleteAccount()">
+            <div class="settings-row-left">
+              <div class="settings-row-icon" style="background:#CC0000">
+                <i class="fas fa-trash-alt"></i>
+              </div>
+              <span>Delete Account</span>
+            </div>
+            <i class="fas fa-chevron-right"></i>
+          </div>
+        </div>
+
+        <div class="app-version">
+          VaultX v1.0.0 • Free Forever ❤️
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-page="home" onclick="App.goTo('home')">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </button>
+    <button class="nav-btn" data-page="favorites" onclick="App.goTo('favorites')">
+      <i class="fas fa-star"></i>
+      <span>Saved</span>
+    </button>
+    <button class="nav-btn fab-center" id="fab-btn" onclick="App.openFAB()">
+      <div class="fab-circle">
+        <i class="fas fa-plus"></i>
+      </div>
+    </button>
+    <button class="nav-btn" data-page="drives" onclick="App.goTo('drives')">
+      <i class="fab fa-google-drive"></i>
+      <span>Drives</span>
+    </button>
+    <button class="nav-btn" data-page="settings" onclick="App.goTo('settings')">
+      <i class="fas fa-cog"></i>
+      <span>Settings</span>
+    </button>
+  </nav>
+
+  <!-- FAB Overlay -->
+  <div class="fab-overlay hidden" id="fab-overlay" onclick="App.closeFAB()"></div>
+
+  <!-- FAB Menu -->
+  <div class="fab-menu hidden" id="fab-menu">
+    <div class="fab-menu-item" onclick="App.addLink()">
+      <div class="fmi-icon" style="background:linear-gradient(135deg,#6C63FF,#9C63FF)">
+        <i class="fas fa-link"></i>
+      </div>
+      <span>Add Link / URL</span>
+    </div>
+    <div class="fab-menu-item" onclick="App.addNote()">
+      <div class="fmi-icon" style="background:linear-gradient(135deg,#11998e,#38ef7d)">
+        <i class="fas fa-sticky-note"></i>
+      </div>
+      <span>Quick Note</span>
+    </div>
+    <div class="fab-menu-item" onclick="App.addFromDrive()">
+      <div class="fmi-icon" style="background:linear-gradient(135deg,#4285F4,#34A853)">
+        <i class="fab fa-google-drive"></i>
+      </div>
+      <span>Pick from Drive</span>
+    </div>
+  </div>
+
+</div>
+<!-- END: app-screen -->
+
+
+<!-- ================================================
+     GLOBAL MODALS
+     ================================================ -->
+
+<!-- Modal: Add Link -->
+<div class="modal-backdrop hidden" id="modal-add-link">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3><i class="fas fa-link"></i> Add Link</h3>
+      <button class="modal-close-btn" onclick="App.closeModal('modal-add-link')">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="url-paste-row">
+        <input type="url" id="url-paste-input"
+               placeholder="Paste any URL here..." />
+        <button class="detect-btn" onclick="App.detectURL()">
+          <i class="fas fa-magic"></i>
+        </button>
+      </div>
+
+      <!-- Preview area -->
+      <div class="url-preview-area hidden" id="url-preview-area">
+        <div class="preview-loading hidden" id="preview-loading">
+          <i class="fas fa-spinner fa-spin"></i>
+          <span>Fetching details...</span>
+        </div>
+        <div id="preview-result"></div>
+      </div>
+
+      <!-- Fields -->
+      <div class="modal-field">
+        <label>Category</label>
+        <select id="add-link-category">
+          <option value="links">Web Link</option>
+          <option value="youtube">YouTube Video</option>
+          <option value="study">Study Material</option>
+          <option value="documents">Document</option>
+        </select>
+      </div>
+      <div class="modal-field">
+        <label>Tags <span style="color:var(--text-muted)">(optional)</span></label>
+        <input type="text" id="add-link-tags"
+               placeholder="e.g. react, tutorial, important" />
+      </div>
+      <div class="modal-field">
+        <label>Note <span style="color:var(--text-muted)">(optional)</span></label>
+        <textarea id="add-link-note" rows="3"
+                  placeholder="Add a personal note..."></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-secondary" onclick="App.closeModal('modal-add-link')">
+        Cancel
+      </button>
+      <button class="btn-primary" id="save-link-btn" onclick="App.saveLink()">
+        <i class="fas fa-save"></i> Save
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Add Note -->
+<div class="modal-backdrop hidden" id="modal-add-note">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3><i class="fas fa-sticky-note"></i> Quick Note</h3>
+      <button class="modal-close-btn" onclick="App.closeModal('modal-add-note')">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-field">
+        <input type="text" id="note-title-input"
+               placeholder="Note title..." />
+      </div>
+      <div class="modal-field">
+        <textarea id="note-body-input" rows="7"
+                  placeholder="Write your note..."></textarea>
+      </div>
+      <div class="note-color-row">
+        <span>Color:</span>
+        <div class="note-colors">
+          <button class="note-color active" data-color="#6C63FF"
+                  style="background:#6C63FF"></button>
+          <button class="note-color" data-color="#FF4444"
+                  style="background:#FF4444"></button>
+          <button class="note-color" data-color="#FFD200"
+                  style="background:#FFD200"></button>
+          <button class="note-color" data-color="#38ef7d"
+                  style="background:#38ef7d"></button>
+          <button class="note-color" data-color="#00D4FF"
+                  style="background:#00D4FF"></button>
+          <button class="note-color" data-color="#f953c6"
+                  style="background:#f953c6"></button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-secondary" onclick="App.closeModal('modal-add-note')">
+        Cancel
+      </button>
+      <button class="btn-primary" onclick="App.saveNote()">
+        <i class="fas fa-save"></i> Save Note
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Item Detail -->
+<div class="modal-backdrop hidden" id="modal-detail">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="detail-modal-title">Details</h3>
+      <button class="modal-close-btn" onclick="App.closeModal('modal-detail')">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body" id="detail-modal-body">
+    </div>
+    <div class="modal-foot">
+      <button class="btn-danger-sm" onclick="App.deleteCurrentItem()">
+        <i class="fas fa-trash"></i> Delete
+      </button>
+      <button class="btn-primary" id="detail-open-btn" onclick="App.openCurrentItem()">
+        <i class="fas fa-external-link-alt"></i> Open
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div id="toast-wrap" class="toast-wrap"></div>
+
+<!-- Offline Banner -->
+<div class="offline-bar hidden" id="offline-bar">
+  <i class="fas fa-wifi-slash"></i>
+  Offline — Vault still works!
+</div>
+
+<!-- Hidden file input -->
+<input type="file" id="file-input" hidden
+       accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,image/*" />
+
+
+<!-- ================================================
+     SCRIPTS
+     ================================================ -->
+
+<!-- Firebase -->
+<script type="module" src="js/firebase-config.js"></script>
+
+<!-- App Scripts -->
+<script src="js/sw-register.js"></script>
+
+</body>
+</html>
