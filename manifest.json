@@ -2,8 +2,8 @@
   "name": "VaultX - Personal Knowledge Vault",
   "short_name": "VaultX",
   "description": "Your secure personal vault for links, notes, files and more",
-  "start_url": "/vaultx/",
-  "scope": "/vaultx/",
+  "start_url": "/VAULTX/",
+  "scope": "/VAULTX/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#0A0A0F",
@@ -22,25 +22,26 @@
     {
       "name": "Add Link",
       "short_name": "Add Link",
-      "url": "/vaultx/?action=add-link",
+      "url": "/VAULTX/?action=add-link",
       "icons": [{ "src": "assets/icons/icon-96.png", "sizes": "96x96" }]
     },
     {
       "name": "Quick Note",
       "short_name": "Note",
-      "url": "/vaultx/?action=add-note",
+      "url": "/VAULTX/?action=add-note",
       "icons": [{ "src": "assets/icons/icon-96.png", "sizes": "96x96" }]
     },
     {
       "name": "Search",
       "short_name": "Search",
-      "url": "/vaultx/?action=search",
+      "url": "/VAULTX/?action=search",
       "icons": [{ "src": "assets/icons/icon-96.png", "sizes": "96x96" }]
     }
   ],
   "share_target": {
-    "action": "/vaultx/",
+    "action": "/VAULTX/",
     "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
     "params": { "title": "title", "text": "text", "url": "url" }
   },
   "prefer_related_applications": false

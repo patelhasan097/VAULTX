@@ -14,7 +14,6 @@ import { getAuth, GoogleAuthProvider,
          deleteUser }                             from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { initializeFirestore,
          persistentLocalCache,
-         singleTabManager,
          collection, doc,
          addDoc, getDoc, getDocs, setDoc,
          updateDoc, deleteDoc,
@@ -41,8 +40,9 @@ const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 // Modern offline persistence (replaces deprecated enableIndexedDbPersistence)
+// persistentLocalCache() enables single-tab offline caching by default
 const db = initializeFirestore(app, {
-  localCache: persistentLocalCache({ tabManager: singleTabManager() })
+  localCache: persistentLocalCache()
 });
 
 const googleProvider = new GoogleAuthProvider();
@@ -168,7 +168,9 @@ const VaultUtils = {
 // ============================================
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/vaultx/sw.js', { scope: '/vaultx/' })
+    // Dynamic scope — works with any repo name (VAULTX, vaultx, etc.)
+    const swScope = new URL('./', location.href).pathname;
+    navigator.serviceWorker.register(swScope + 'sw.js', { scope: swScope })
       .then(reg => {
         reg.addEventListener('updatefound', () => {
           const w = reg.installing;

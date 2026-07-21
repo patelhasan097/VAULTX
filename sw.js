@@ -1,22 +1,28 @@
 // ============================================
-// VAULTX SERVICE WORKER v2.0
-// All paths lowercase — GitHub Pages safe
+// VAULTX SERVICE WORKER v2.1
+// Dynamic paths — works with any repo name
 // ============================================
 
-const APP_VER      = 'v2.0.0';
+const APP_VER      = 'v2.1.0';
 const STATIC_CACHE = `vaultx-static-${APP_VER}`;
 const DYNAMIC_CACHE= `vaultx-dynamic-${APP_VER}`;
 
+// Dynamic base path — auto-detects /VAULTX/ or /vaultx/ or any name
+const BASE = new URL('./', self.registration.scope).pathname;
+// e.g. BASE = '/VAULTX/' or '/vaultx/' depending on repo name
+
 const STATIC_ASSETS = [
-  '/vaultx/',
-  '/vaultx/index.html',
-  '/vaultx/manifest.json',
-  '/vaultx/css/main.css',
-  '/vaultx/css/app.css',
-  '/vaultx/js/config.js',
-  '/vaultx/js/auth.js',
-  '/vaultx/js/drive.js',
-  '/vaultx/js/app.js'
+  BASE,
+  BASE + 'index.html',
+  BASE + 'manifest.json',
+  BASE + 'css/main.css',
+  BASE + 'css/app.css',
+  BASE + 'js/config.js',
+  BASE + 'js/auth.js',
+  BASE + 'js/drive.js',
+  BASE + 'js/app.js',
+  BASE + 'assets/icons/icon-192.png',
+  BASE + 'assets/icons/icon-512.png'
 ];
 
 const EXTERNAL_ASSETS = [
@@ -29,15 +35,16 @@ const NETWORK_ONLY = [
   'firebaseio.com', 'googleapis.com', 'firebase.google.com',
   'identitytoolkit.googleapis.com', 'securetoken.googleapis.com',
   'allorigins.win', 'img.youtube.com', 'www.youtube.com',
-  'accounts.google.com', 'fonts.gstatic.com'
+  'accounts.google.com'
 ];
 
 // ---- INSTALL ----
 self.addEventListener('install', e => {
+  console.log('[VaultX SW] Installing, BASE =', BASE);
   e.waitUntil(
     caches.open(STATIC_CACHE).then(cache => {
       const all = [
-        ...STATIC_ASSETS.map(url => cache.add(url).catch(() => {})),
+        ...STATIC_ASSETS.map(url => cache.add(url).catch(err => console.warn('[SW] Could not cache:', url, err.message))),
         ...EXTERNAL_ASSETS.map(url => cache.add(url).catch(() => {}))
       ];
       return Promise.all(all);
@@ -76,17 +83,18 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // Cache-first for static assets
+  // Cache-first for static assets (CSS, JS, fonts, images)
   const isStatic = ['style','script','font','image'].includes(request.destination)
-    || url.pathname.startsWith('/vaultx/assets/')
-    || url.hostname.includes('cdnjs.cloudflare.com');
+    || url.pathname.startsWith(BASE + 'assets/')
+    || url.hostname.includes('cdnjs.cloudflare.com')
+    || url.hostname.includes('fonts.gstatic.com');
 
   if (isStatic) {
     e.respondWith(cacheFirst(request));
     return;
   }
 
-  // Network-first for everything else (HTML, API)
+  // Network-first for HTML and everything else
   e.respondWith(networkFirst(request));
 });
 
@@ -95,10 +103,7 @@ async function cacheFirst(req) {
   if (hit) return hit;
   try {
     const res = await fetch(req);
-    if (res?.ok) {
-      const c = await caches.open(STATIC_CACHE);
-      c.put(req, res.clone());
-    }
+    if (res?.ok) (await caches.open(STATIC_CACHE)).put(req, res.clone());
     return res;
   } catch {
     return new Response('Offline', { status: 503 });
@@ -108,16 +113,13 @@ async function cacheFirst(req) {
 async function networkFirst(req) {
   try {
     const res = await fetch(req);
-    if (res?.ok) {
-      const c = await caches.open(DYNAMIC_CACHE);
-      c.put(req, res.clone());
-    }
+    if (res?.ok) (await caches.open(DYNAMIC_CACHE)).put(req, res.clone());
     return res;
   } catch {
     const hit = await caches.match(req);
     if (hit) return hit;
     if (req.destination === 'document') {
-      const fb = await caches.match('/vaultx/index.html');
+      const fb = await caches.match(BASE + 'index.html');
       if (fb) return fb;
     }
     return new Response('Offline', { status: 503 });
@@ -151,16 +153,18 @@ self.addEventListener('push', e => {
   const d = e.data.json();
   e.waitUntil(
     self.registration.showNotification('VaultX', {
-      body: d.message || 'New notification',
-      icon: '/vaultx/assets/icons/icon-192.png',
-      badge: '/vaultx/assets/icons/icon-72.png',
+      body:    d.message || 'New notification',
+      icon:    BASE + 'assets/icons/icon-192.png',
+      badge:   BASE + 'assets/icons/icon-72.png',
       vibrate: [100, 50, 100],
-      data: { url: d.url || '/vaultx/' }
+      data:    { url: d.url || self.registration.scope }
     })
   );
 });
 
 self.addEventListener('notificationclick', e => {
   e.notification.close();
-  e.waitUntil(clients.openWindow(e.notification.data?.url || '/vaultx/'));
+  e.waitUntil(clients.openWindow(e.notification.data?.url || self.registration.scope));
 });
+
+console.log('[VaultX SW] Loaded, waiting for install...');
