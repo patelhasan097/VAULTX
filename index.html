@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#6C63FF">
+  <meta name="description" content="VaultX — Your secure personal knowledge vault">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="VaultX">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+  <title>VaultX — Personal Knowledge Vault</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- App CSS (main.css FIRST — defines all tokens) -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<!-- ================================================
+     ALWAYS-ON-TOP ELEMENTS
+     ================================================ -->
+
+<!-- Toast container -->
+<div id="toast-wrap" class="toast-wrap" aria-live="polite" aria-atomic="false"></div>
+
+<!-- Offline banner -->
+<div id="offline-banner" class="offline-banner hidden" role="alert">
+  <i class="fas fa-wifi" aria-hidden="true"></i>
+  <span>No internet connection</span>
+</div>
+
+<!-- ================================================
+     SCREEN 1: SPLASH
+     ================================================ -->
+<div id="splash-screen" class="screen" role="main" aria-label="Loading VaultX">
+  <div class="splash-inner">
+    <div class="splash-icon-wrap" aria-hidden="true">
+      <i class="fas fa-bolt"></i>
+    </div>
+    <h1 class="splash-name">VaultX</h1>
+    <p class="splash-tagline">Your personal knowledge vault</p>
+    <div class="splash-loader" role="progressbar" aria-label="Loading">
+      <div class="splash-loader-bar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================
+     SCREEN 2: AUTH
+     ================================================ -->
+<div id="auth-screen" class="screen hidden" role="main">
+  <!-- Animated background -->
+  <div class="auth-bg" aria-hidden="true">
+    <div class="auth-blob blob1"></div>
+    <div class="auth-blob blob2"></div>
+    <div class="auth-blob blob3"></div>
+  </div>
+
+  <!-- Brand header -->
+  <div class="auth-brand">
+    <div class="vault-logo">
+      <div class="vault-logo-icon" aria-hidden="true"><i class="fas fa-bolt"></i></div>
+      <span class="vault-logo-text">VaultX</span>
+    </div>
+    <p class="auth-tagline">Your personal knowledge vault</p>
+  </div>
+
+  <!-- Auth sheet -->
+  <div class="auth-sheet">
+    <!-- Tabs -->
+    <div class="auth-tabs" role="tablist">
+      <button class="auth-tab active" data-tab="login" role="tab" aria-selected="true">Sign in</button>
+      <button class="auth-tab"        data-tab="register" role="tab" aria-selected="false">Create account</button>
+    </div>
+
+    <!-- Login form -->
+    <div class="auth-form active" id="form-login" role="tabpanel">
+      <div class="input-wrap">
+        <i class="fas fa-envelope" aria-hidden="true"></i>
+        <input type="email" id="login-email" placeholder="Email address"
+               autocomplete="email" inputmode="email">
+      </div>
+      <div class="input-wrap">
+        <i class="fas fa-lock" aria-hidden="true"></i>
+        <input type="password" id="login-password" placeholder="Password"
+               autocomplete="current-password">
+        <button type="button" class="eye-btn end-icon" data-for="login-password" aria-label="Show password">
+          <i class="fas fa-eye" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="auth-forgot">
+        <button type="button" id="forgot-btn">Forgot password?</button>
+      </div>
+      <button class="btn btn-primary btn-block" id="login-btn">Sign in</button>
+      <div class="auth-or"><span>or</span></div>
+      <button class="btn btn-google btn-block" id="google-signin-btn">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" height="18" alt="">
+        Continue with Google
+      </button>
+    </div>
+
+    <!-- Register form -->
+    <div class="auth-form" id="form-register" role="tabpanel">
+      <div class="input-wrap">
+        <i class="fas fa-user" aria-hidden="true"></i>
+        <input type="text" id="reg-name" placeholder="Full name"
+               autocomplete="name">
+      </div>
+      <div class="input-wrap">
+        <i class="fas fa-envelope" aria-hidden="true"></i>
+        <input type="email" id="reg-email" placeholder="Email address"
+               autocomplete="email" inputmode="email">
+      </div>
+      <div class="input-wrap">
+        <i class="fas fa-lock" aria-hidden="true"></i>
+        <input type="password" id="reg-password" placeholder="Password (min 6 chars)"
+               autocomplete="new-password">
+        <button type="button" class="eye-btn end-icon" data-for="reg-password" aria-label="Show password">
+          <i class="fas fa-eye" aria-hidden="true"></i>
+        </button>
+      </div>
+      <button class="btn btn-primary btn-block" id="register-btn">Create account</button>
+      <div class="auth-or"><span>or</span></div>
+      <button class="btn btn-google btn-block" id="google-register-btn">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" height="18" alt="">
+        Continue with Google
+      </button>
+    </div>
+
+    <!-- Auth message (errors / success) -->
+    <div id="auth-msg" class="auth-msg hidden" role="alert"></div>
+  </div>
+</div>
+
+<!-- ================================================
+     SCREEN 3: ONBOARDING
+     ================================================ -->
+<div id="onboarding-screen" class="screen hidden" role="main">
+  <!-- Top bar -->
+  <div class="ob-top">
+    <div class="vault-logo">
+      <div class="vault-logo-icon" aria-hidden="true"><i class="fas fa-bolt"></i></div>
+      <span class="vault-logo-text">VaultX</span>
+    </div>
+    <div class="ob-dots" role="tablist" aria-label="Setup progress">
+      <div class="ob-dot active" data-step="0"></div>
+      <div class="ob-dot"        data-step="1"></div>
+      <div class="ob-dot"        data-step="2"></div>
+    </div>
+  </div>
+
+  <!-- Step 0: Welcome -->
+  <div class="ob-step active" id="ob-step-0">
+    <div class="ob-big-icon" style="background: var(--grad-primary)" aria-hidden="true">
+      <i class="fas fa-vault"></i>
+    </div>
+    <h2>Welcome to VaultX</h2>
+    <p>Save links, notes, and files in one secure place. Access everything instantly — even offline.</p>
+    <div class="ob-features">
+      <div class="ob-feat"><i class="fab fa-youtube"      style="color:#FF4444"></i><span>Save YouTube videos with thumbnails</span></div>
+      <div class="ob-feat"><i class="fas fa-link"          style="color:#6C63FF"></i><span>Bookmark any website with preview</span></div>
+      <div class="ob-feat"><i class="fas fa-sticky-note"   style="color:#FFD200"></i><span>Color-coded quick notes</span></div>
+      <div class="ob-feat"><i class="fab fa-google-drive"  style="color:#38ef7d"></i><span>Files stored in YOUR Google Drive</span></div>
+      <div class="ob-feat"><i class="fas fa-shield-halved" style="color:#00D4FF"></i><span>Secured with PIN + Biometric</span></div>
+    </div>
+  </div>
+
+  <!-- Step 1: Set PIN -->
+  <div class="ob-step" id="ob-step-1">
+    <div class="ob-big-icon" style="background: var(--grad-success)" aria-hidden="true">
+      <i class="fas fa-lock"></i>
+    </div>
+    <h2>Set your PIN</h2>
+    <p>Create a 4-digit PIN to protect your vault. Required every time you open VaultX.</p>
+    <!-- PIN dots -->
+    <div class="pin-entry ob-pin">
+      <div class="pin-dots" id="ob-pin-dots" role="img" aria-label="PIN entry">
+        <div class="pin-dot"></div>
+        <div class="pin-dot"></div>
+        <div class="pin-dot"></div>
+        <div class="pin-dot"></div>
+      </div>
+      <p class="pin-hint" id="ob-pin-hint">Enter your 4-digit PIN</p>
+    </div>
+    <!-- PIN numpad -->
+    <div class="pin-pad" id="ob-pin-pad" role="group" aria-label="Number pad">
+      <button class="pin-key" data-digit="1" aria-label="1">1</button>
+      <button class="pin-key" data-digit="2" aria-label="2">2</button>
+      <button class="pin-key" data-digit="3" aria-label="3">3</button>
+      <button class="pin-key" data-digit="4" aria-label="4">4</button>
+      <button class="pin-key" data-digit="5" aria-label="5">5</button>
+      <button class="pin-key" data-digit="6" aria-label="6">6</button>
+      <button class="pin-key" data-digit="7" aria-label="7">7</button>
+      <button class="pin-key" data-digit="8" aria-label="8">8</button>
+      <button class="pin-key" data-digit="9" aria-label="9">9</button>
+      <div></div>
+      <button class="pin-key" data-digit="0" aria-label="0">0</button>
+      <button class="pin-key pin-back" data-digit="back" aria-label="Backspace">
+        <i class="fas fa-delete-left" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Step 2: Biometric -->
+  <div class="ob-step" id="ob-step-2">
+    <div class="ob-big-icon" style="background: var(--grad-warn)" aria-hidden="true">
+      <i class="fas fa-fingerprint"></i>
+    </div>
+    <h2>Enable biometric</h2>
+    <p>Use your fingerprint or Face ID to unlock VaultX instantly. PIN always works as backup.</p>
+    <button class="bio-ring" id="ob-bio-btn" aria-label="Enable biometric unlock">
+      <i class="fas fa-fingerprint" aria-hidden="true"></i>
+    </button>
+    <p class="bio-status" id="ob-bio-status">Tap to enable biometric unlock</p>
+  </div>
+
+  <!-- Footer buttons -->
+  <div class="ob-footer">
+    <button class="btn btn-secondary hidden" id="ob-skip-btn">Skip</button>
+    <button class="btn btn-primary"          id="ob-next-btn">Get started</button>
+  </div>
+</div>
+
+<!-- ================================================
+     SCREEN 4: PIN VERIFY
+     ================================================ -->
+<div id="pin-screen" class="screen hidden" role="main">
+  <div class="pin-screen-inner">
+    <!-- User info -->
+    <div class="pin-user">
+      <div class="pin-avatar" id="pin-avatar" aria-hidden="true">
+        <i class="fas fa-user" id="pin-avatar-icon"></i>
+        <img id="pin-avatar-img" alt="" style="display:none">
+      </div>
+      <p class="pin-name" id="pin-name">Welcome back</p>
+      <p class="pin-sub">Enter your PIN to unlock</p>
+    </div>
+
+    <!-- PIN display -->
+    <div class="pin-entry">
+      <div class="pin-dots" id="pin-verify-dots" role="img" aria-label="PIN entry progress">
+        <div class="pin-dot"></div>
+        <div class="pin-dot"></div>
+        <div class="pin-dot"></div>
+        <div class="pin-dot"></div>
+      </div>
+      <p class="pin-error hidden" id="pin-error-msg" role="alert">Incorrect PIN. Try again.</p>
+    </div>
+
+    <!-- Numpad -->
+    <div class="pin-pad" id="main-pin-pad" role="group" aria-label="Number pad">
+      <button class="pin-key" data-digit="1" aria-label="1">1</button>
+      <button class="pin-key" data-digit="2" aria-label="2">2</button>
+      <button class="pin-key" data-digit="3" aria-label="3">3</button>
+      <button class="pin-key" data-digit="4" aria-label="4">4</button>
+      <button class="pin-key" data-digit="5" aria-label="5">5</button>
+      <button class="pin-key" data-digit="6" aria-label="6">6</button>
+      <button class="pin-key" data-digit="7" aria-label="7">7</button>
+      <button class="pin-key" data-digit="8" aria-label="8">8</button>
+      <button class="pin-key" data-digit="9" aria-label="9">9</button>
+      <button class="pin-key pin-bio" id="bio-unlock-btn" aria-label="Biometric unlock">
+        <i class="fas fa-fingerprint" aria-hidden="true"></i>
+      </button>
+      <button class="pin-key" data-digit="0" aria-label="0">0</button>
+      <button class="pin-key pin-back" data-digit="back" aria-label="Backspace">
+        <i class="fas fa-delete-left" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <button class="pin-signout-btn" id="pin-signout-btn">
+      <i class="fas fa-right-from-bracket" aria-hidden="true"></i> Not you? Sign out
+    </button>
+  </div>
+</div>
+
+<!-- ================================================
+     SCREEN 5: MAIN APP
+     ================================================ -->
+<div id="app-screen" class="screen hidden" role="main">
+
+  <!-- App header -->
+  <header class="app-header">
+    <button class="header-avatar" id="header-avatar-btn" aria-label="Your profile">
+      <i class="fas fa-user" id="header-avatar-icon" aria-hidden="true"></i>
+      <img id="header-avatar-img" alt="Your avatar" style="display:none">
+    </button>
+    <div class="vault-logo">
+      <div class="vault-logo-icon" aria-hidden="true"><i class="fas fa-bolt"></i></div>
+      <span class="vault-logo-text">VaultX</span>
+    </div>
+    <button class="btn-icon" id="app-search-btn" aria-label="Search">
+      <i class="fas fa-search" aria-hidden="true"></i>
+    </button>
+  </header>
+
+  <!-- Page container -->
+  <div class="app-main">
+
+    <!-- ── HOME PAGE ── -->
+    <div class="page active" id="home-page" role="region" aria-label="Home">
+      <!-- Greeting -->
+      <div class="home-greeting">
+        <p id="greeting-time">Good morning 👋</p>
+        <h2 id="greeting-name">Loading...</h2>
+      </div>
+
+      <!-- Stats grid -->
+      <div class="stat-grid">
+        <div class="stat-card" style="--sc: var(--grad-primary)">
+          <i class="fas fa-layer-group" aria-hidden="true"></i>
+          <div>
+            <span class="stat-num" id="stat-total">0</span>
+            <span class="stat-label">Saved</span>
+          </div>
+        </div>
+        <div class="stat-card" style="--sc: var(--grad-danger)">
+          <i class="fab fa-youtube" aria-hidden="true"></i>
+          <div>
+            <span class="stat-num" id="stat-yt">0</span>
+            <span class="stat-label">YouTube</span>
+          </div>
+        </div>
+        <div class="stat-card" style="--sc: var(--grad-warn)">
+          <i class="fas fa-sticky-note" aria-hidden="true"></i>
+          <div>
+            <span class="stat-num" id="stat-notes">0</span>
+            <span class="stat-label">Notes</span>
+          </div>
+        </div>
+        <div class="stat-card" style="--sc: var(--grad-success)">
+          <i class="fas fa-file" aria-hidden="true"></i>
+          <div>
+            <span class="stat-num" id="stat-files">0</span>
+            <span class="stat-label">Files</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick add row -->
+      <div class="quick-add">
+        <button class="quick-add-btn" data-action="add-link" aria-label="Add link">
+          <i class="fas fa-link" aria-hidden="true"></i>
+          <span>Add link</span>
+        </button>
+        <button class="quick-add-btn" data-action="add-note" aria-label="Add note">
+          <i class="fas fa-sticky-note" aria-hidden="true"></i>
+          <span>Note</span>
+        </button>
+        <button class="quick-add-btn" data-action="add-file" aria-label="Upload file">
+          <i class="fab fa-google-drive" aria-hidden="true"></i>
+          <span>Upload</span>
+        </button>
+      </div>
+
+      <!-- Recent items -->
+      <p class="section-title" style="margin-top: var(--s2)">Recently saved</p>
+      <div class="items-list" id="home-recent-list" role="list"></div>
+    </div>
+
+    <!-- ── LIBRARY PAGE ── -->
+    <div class="page" id="library-page" role="region" aria-label="Library">
+      <div class="lib-header">
+        <h2>Library</h2>
+        <button class="btn-icon" id="sort-btn" aria-label="Sort items" aria-haspopup="true">
+          <i class="fas fa-sort-amount-down" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <!-- Sort dropdown -->
+      <div class="sort-dropdown hidden" id="sort-dropdown" role="menu">
+        <button class="sort-opt active" data-sort="newest" role="menuitem">Newest first</button>
+        <button class="sort-opt"        data-sort="oldest" role="menuitem">Oldest first</button>
+        <button class="sort-opt"        data-sort="alpha"  role="menuitem">A to Z</button>
+      </div>
+
+      <!-- Filter pills -->
+      <div class="filter-pills" role="group" aria-label="Filter items">
+        <button class="pill active" data-filter="all"     aria-pressed="true">All</button>
+        <button class="pill"        data-filter="youtube" aria-pressed="false">
+          <i class="fab fa-youtube" aria-hidden="true"></i> YouTube
+        </button>
+        <button class="pill"        data-filter="link"    aria-pressed="false">
+          <i class="fas fa-link" aria-hidden="true"></i> Links
+        </button>
+        <button class="pill"        data-filter="note"    aria-pressed="false">
+          <i class="fas fa-sticky-note" aria-hidden="true"></i> Notes
+        </button>
+        <button class="pill"        data-filter="file"    aria-pressed="false">
+          <i class="fas fa-file" aria-hidden="true"></i> Files
+        </button>
+        <button class="pill"        data-filter="starred" aria-pressed="false">
+          <i class="fas fa-star" aria-hidden="true"></i> Starred
+        </button>
+      </div>
+
+      <!-- Items -->
+      <div class="items-list" id="library-list" role="list"></div>
+    </div>
+
+    <!-- ── SEARCH PAGE ── -->
+    <div class="page" id="search-page" role="region" aria-label="Search">
+      <div class="search-bar" role="search">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input type="search" id="search-input"
+               placeholder="Search everything..."
+               autocomplete="off" autocorrect="off"
+               spellcheck="false" aria-label="Search vault">
+        <button class="link-open-btn hidden" id="search-clear-btn" aria-label="Clear search">
+          <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="items-list" id="search-results" role="list" style="margin-top:var(--s4)"></div>
+    </div>
+
+    <!-- ── SETTINGS PAGE ── -->
+    <div class="page" id="settings-page" role="region" aria-label="Settings">
+      <h2 class="settings-title">Settings</h2>
+
+      <!-- Profile card -->
+      <div class="settings-profile">
+        <div class="settings-avatar" id="settings-avatar" aria-hidden="true">
+          <i class="fas fa-user"></i>
+        </div>
+        <div>
+          <p class="settings-profile-name" id="settings-name">Loading...</p>
+          <p class="settings-profile-email" id="settings-email"></p>
+        </div>
+      </div>
+
+      <!-- Google Drive -->
+      <div class="settings-section">
+        <p class="settings-section-title">Google Drive</p>
+        <div class="settings-item">
+          <div class="settings-item-icon" style="background: var(--grad-success)">
+            <i class="fab fa-google-drive" aria-hidden="true"></i>
+          </div>
+          <div class="settings-item-info">
+            <span class="settings-item-label">Connected Drive</span>
+            <span class="settings-item-sub" id="drive-email-display">Not connected</span>
+          </div>
+          <button class="settings-action-btn" id="connect-drive-btn">Connect</button>
+        </div>
+      </div>
+
+      <!-- Security -->
+      <div class="settings-section">
+        <p class="settings-section-title">Security</p>
+
+        <div class="settings-item">
+          <div class="settings-item-icon" style="background: var(--grad-primary)">
+            <i class="fas fa-lock" aria-hidden="true"></i>
+          </div>
+          <div class="settings-item-info">
+            <span class="settings-item-label">Change PIN</span>
+            <span class="settings-item-sub">Update your 4-digit PIN</span>
+          </div>
+          <button class="settings-action-btn" id="change-pin-btn">Change</button>
+        </div>
+
+        <div class="settings-item">
+          <div class="settings-item-icon" style="background: var(--grad-teal)">
+            <i class="fas fa-fingerprint" aria-hidden="true"></i>
+          </div>
+          <div class="settings-item-info">
+            <span class="settings-item-label">Biometric unlock</span>
+            <span class="settings-item-sub">Fingerprint or Face ID</span>
+          </div>
+          <div class="toggle-wrap">
+            <input type="checkbox" id="bio-toggle" class="toggle-input">
+            <label for="bio-toggle" class="toggle-label" aria-label="Toggle biometric"></label>
+          </div>
+        </div>
+
+        <div class="settings-item">
+          <div class="settings-item-icon" style="background: var(--grad-warn)">
+            <i class="fas fa-clock" aria-hidden="true"></i>
+          </div>
+          <div class="settings-item-info">
+            <span class="settings-item-label">Auto-lock</span>
+            <span class="settings-item-sub">Lock after inactivity</span>
+          </div>
+          <select class="settings-select" id="autolock-select" aria-label="Auto-lock timeout">
+            <option value="0">Off</option>
+            <option value="1">1 min</option>
+            <option value="5" selected>5 min</option>
+            <option value="15">15 min</option>
+            <option value="30">30 min</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Appearance -->
+      <div class="settings-section">
+        <p class="settings-section-title">Appearance</p>
+        <div class="settings-item">
+          <div class="settings-item-icon" style="background: var(--grad-purple)">
+            <i class="fas fa-moon" aria-hidden="true"></i>
+          </div>
+          <div class="settings-item-info">
+            <span class="settings-item-label">Dark mode</span>
+            <span class="settings-item-sub">Dark theme (recommended)</span>
+          </div>
+          <div class="toggle-wrap">
+            <input type="checkbox" id="dark-toggle" class="toggle-input" checked>
+            <label for="dark-toggle" class="toggle-label" aria-label="Toggle dark mode"></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data -->
+      <div class="settings-section">
+        <p class="settings-section-title">Data</p>
+        <button class="settings-item" id="export-btn" style="width:100%">
+          <div class="settings-item-icon" style="background: var(--grad-blue)">
+            <i class="fas fa-download" aria-hidden="true"></i>
+          </div>
+          <div class="settings-item-info">
+            <span class="settings-item-label">Export data</span>
+            <span class="settings-item-sub">Download all items as JSON</span>
+          </div>
+          <i class="fas fa-chevron-right settings-item-chevron" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <!-- Account -->
+      <div class="settings-section">
+        <p class="settings-section-title">Account</p>
+        <button class="settings-item" id="signout-btn" style="width:100%">
+          <div class="settings-item-icon" style="background: linear-gradient(135deg,#636e72,#b2bec3)">
+            <i class="fas fa-right-from-bracket" aria-hidden="true"></i>
+          </div>
+          <div class="settings-item-info">
+            <span class="settings-item-label">Sign out</span>
+            <span class="settings-item-sub">Sign out from this device</span>
+          </div>
+          <i class="fas fa-chevron-right settings-item-chevron" aria-hidden="true"></i>
+        </button>
+        <button class="settings-item settings-danger" id="delete-account-btn" style="width:100%">
+          <div class="settings-item-icon" style="background: var(--grad-danger)">
+            <i class="fas fa-trash" aria-hidden="true"></i>
+          </div>
+          <div class="settings-item-info">
+            <span class="settings-item-label">Delete account</span>
+            <span class="settings-item-sub">Permanently delete all data</span>
+          </div>
+          <i class="fas fa-chevron-right settings-item-chevron" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <p class="settings-version">VaultX v2.0 · Made with ❤️ for productivity</p>
+    </div>
+
+  </div><!-- end app-main -->
+
+  <!-- ── BOTTOM NAV ── -->
+  <nav class="bottom-nav" role="navigation" aria-label="Main navigation">
+    <button class="nav-btn active" data-page="home" aria-label="Home" aria-pressed="true">
+      <i class="fas fa-home" aria-hidden="true"></i>
+      <span>Home</span>
+    </button>
+    <button class="nav-btn" data-page="library" aria-label="Library" aria-pressed="false">
+      <i class="fas fa-layer-group" aria-hidden="true"></i>
+      <span>Library</span>
+    </button>
+    <!-- FAB placeholder -->
+    <div class="nav-fab-space" aria-hidden="true"></div>
+    <button class="nav-btn" data-page="search" aria-label="Search" aria-pressed="false">
+      <i class="fas fa-search" aria-hidden="true"></i>
+      <span>Search</span>
+    </button>
+    <button class="nav-btn" data-page="settings" aria-label="Settings" aria-pressed="false">
+      <i class="fas fa-gear" aria-hidden="true"></i>
+      <span>Settings</span>
+    </button>
+  </nav>
+
+  <!-- ── FAB ── -->
+  <div class="fab-container" id="fab-container" role="complementary" aria-label="Add content">
+    <div class="fab-menu hidden" id="fab-menu">
+      <div class="fab-menu-item">
+        <span class="fab-label">Upload file</span>
+        <button class="fab-mini" data-action="add-file" aria-label="Upload file to Drive">
+          <i class="fab fa-google-drive" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="fab-menu-item">
+        <span class="fab-label">Quick note</span>
+        <button class="fab-mini" data-action="add-note" aria-label="Add quick note">
+          <i class="fas fa-sticky-note" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="fab-menu-item">
+        <span class="fab-label">Add link</span>
+        <button class="fab-mini" data-action="add-link" aria-label="Add link or URL">
+          <i class="fas fa-link" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+    <button class="fab-btn" id="fab-btn" aria-label="Add item" aria-haspopup="true" aria-expanded="false">
+      <i class="fas fa-plus" id="fab-icon" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <!-- FAB backdrop -->
+  <div class="fab-overlay hidden" id="fab-overlay" aria-hidden="true"></div>
+
+</div><!-- end app-screen -->
+
+<!-- ================================================
+     MODALS (global, above all screens)
+     ================================================ -->
+
+<!-- ADD LINK MODAL -->
+<div class="modal-backdrop hidden" id="add-link-modal" role="dialog" aria-modal="true" aria-labelledby="add-link-title">
+  <div class="modal" style="position:relative">
+    <div class="modal-handle" aria-hidden="true"></div>
+    <div class="modal-header">
+      <h3 id="add-link-title">Add link</h3>
+      <button class="btn-icon modal-close" data-modal="add-link-modal" aria-label="Close">
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- URL input -->
+      <div class="input-wrap">
+        <i class="fas fa-link" aria-hidden="true"></i>
+        <input type="url" id="link-url-input" placeholder="Paste any URL or YouTube link..."
+               autocomplete="off" inputmode="url" aria-label="URL">
+        <button class="end-icon" id="detect-btn" aria-label="Fetch link info" style="right:10px">
+          <i class="fas fa-arrow-right" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <!-- Link preview -->
+      <div class="link-preview hidden" id="link-preview" aria-live="polite"></div>
+
+      <!-- Tags -->
+      <div class="tags-input-section hidden" id="link-tags-wrap">
+        <div class="input-wrap">
+          <i class="fas fa-tag" aria-hidden="true"></i>
+          <input type="text" id="link-tags-input" placeholder="Add tags, press Enter"
+                 autocomplete="off" aria-label="Add tags">
+        </div>
+        <div class="tags-chips" id="link-tags-display"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-modal="add-link-modal">Cancel</button>
+      <button class="btn btn-primary" id="save-link-btn" disabled>
+        <i class="fas fa-check" aria-hidden="true"></i> Save
+      </button>
+    </div>
+    <!-- Loading overlay -->
+    <div class="modal-loading hidden" id="link-loading">
+      <div class="spinner spinner-lg"></div>
+      <span>Fetching info...</span>
+    </div>
+  </div>
+</div>
+
+<!-- ADD NOTE MODAL -->
+<div class="modal-backdrop hidden" id="add-note-modal" role="dialog" aria-modal="true" aria-labelledby="add-note-title">
+  <div class="modal">
+    <div class="modal-handle" aria-hidden="true"></div>
+    <div class="modal-header">
+      <h3 id="add-note-title">Quick note</h3>
+      <button class="btn-icon modal-close" data-modal="add-note-modal" aria-label="Close">
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <input type="text" class="note-title-input" id="note-title"
+             placeholder="Title (optional)" autocomplete="off" aria-label="Note title">
+      <textarea class="note-textarea" id="note-content"
+                placeholder="Write your note here..."
+                rows="5" aria-label="Note content"></textarea>
+      <!-- Color swatches -->
+      <div class="note-colors" role="group" aria-label="Note color">
+        <span class="note-color-swatch active" data-color="#6C63FF" style="background:#6C63FF" role="radio" aria-checked="true"  title="Purple" tabindex="0"></span>
+        <span class="note-color-swatch"        data-color="#00D4FF" style="background:#00D4FF" role="radio" aria-checked="false" title="Cyan"   tabindex="0"></span>
+        <span class="note-color-swatch"        data-color="#38ef7d" style="background:#38ef7d" role="radio" aria-checked="false" title="Green"  tabindex="0"></span>
+        <span class="note-color-swatch"        data-color="#FFD200" style="background:#FFD200" role="radio" aria-checked="false" title="Yellow" tabindex="0"></span>
+        <span class="note-color-swatch"        data-color="#FF6B6B" style="background:#FF6B6B" role="radio" aria-checked="false" title="Red"    tabindex="0"></span>
+        <span class="note-color-swatch"        data-color="#f093fb" style="background:#f093fb" role="radio" aria-checked="false" title="Pink"   tabindex="0"></span>
+        <span class="note-color-swatch"        data-color="#FF8C00" style="background:#FF8C00" role="radio" aria-checked="false" title="Orange" tabindex="0"></span>
+        <span class="note-color-swatch"        data-color="#E2E8F0" style="background:#E2E8F0" role="radio" aria-checked="false" title="White"  tabindex="0"></span>
+      </div>
+      <!-- Tags -->
+      <div class="tags-input-section">
+        <div class="input-wrap">
+          <i class="fas fa-tag" aria-hidden="true"></i>
+          <input type="text" id="note-tags-input" placeholder="Add tags, press Enter"
+                 autocomplete="off" aria-label="Add tags">
+        </div>
+        <div class="tags-chips" id="note-tags-display"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-modal="add-note-modal">Cancel</button>
+      <button class="btn btn-primary"   id="save-note-btn">
+        <i class="fas fa-check" aria-hidden="true"></i> Save note
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ITEM DETAIL MODAL -->
+<div class="modal-backdrop hidden" id="item-detail-modal" role="dialog" aria-modal="true" aria-labelledby="detail-type-label">
+  <div class="modal" style="max-height:90vh">
+    <div class="modal-handle" aria-hidden="true"></div>
+    <div class="modal-header">
+      <h3 id="detail-type-label">Item</h3>
+      <button class="btn-icon modal-close" data-modal="item-detail-modal" aria-label="Close">
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="modal-body" id="detail-body"></div>
+    <div class="modal-footer" id="detail-footer"></div>
+  </div>
+</div>
+
+<!-- CONFIRM DELETE MODAL -->
+<div class="modal-backdrop hidden" id="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+  <div class="modal modal-centered modal-sm">
+    <div class="modal-body">
+      <div class="confirm-modal-inner">
+        <div class="confirm-icon" aria-hidden="true"><i class="fas fa-trash-can"></i></div>
+        <p class="confirm-title" id="confirm-title">Delete item?</p>
+        <p class="confirm-msg"   id="confirm-message">This action cannot be undone.</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="confirm-cancel">Cancel</button>
+      <button class="btn btn-danger"    id="confirm-ok">
+        <i class="fas fa-trash" aria-hidden="true"></i> Delete
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- CHANGE PIN MODAL -->
+<div class="modal-backdrop hidden" id="change-pin-modal" role="dialog" aria-modal="true" aria-labelledby="change-pin-modal-title">
+  <div class="modal modal-centered">
+    <div class="modal-header">
+      <h3 id="change-pin-modal-title">Change PIN</h3>
+      <button class="btn-icon modal-close" data-modal="change-pin-modal" aria-label="Close">
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="pin-entry pin-in-modal">
+        <div class="pin-dots" id="change-pin-dots" role="img" aria-label="PIN entry">
+          <div class="pin-dot"></div>
+          <div class="pin-dot"></div>
+          <div class="pin-dot"></div>
+          <div class="pin-dot"></div>
+        </div>
+        <p class="pin-hint" id="change-pin-hint">Enter current PIN</p>
+      </div>
+      <div class="pin-pad" id="change-pin-pad" role="group" aria-label="Number pad">
+        <button class="pin-key" data-digit="1">1</button>
+        <button class="pin-key" data-digit="2">2</button>
+        <button class="pin-key" data-digit="3">3</button>
+        <button class="pin-key" data-digit="4">4</button>
+        <button class="pin-key" data-digit="5">5</button>
+        <button class="pin-key" data-digit="6">6</button>
+        <button class="pin-key" data-digit="7">7</button>
+        <button class="pin-key" data-digit="8">8</button>
+        <button class="pin-key" data-digit="9">9</button>
+        <div></div>
+        <button class="pin-key" data-digit="0">0</button>
+        <button class="pin-key pin-back" data-digit="back" aria-label="Backspace">
+          <i class="fas fa-delete-left" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden file input for Drive uploads -->
+<input type="file" id="file-input" style="display:none" accept="*/*" aria-hidden="true">
+
+<!-- ================================================
+     SCRIPTS — single entry point
+     ================================================ -->
+<script type="module" src="js/config.js"></script>
+
+</body>
+</html>
